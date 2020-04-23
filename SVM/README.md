@@ -1,19 +1,19 @@
 # Liver Disease Prediction
  Given blood work results of hundreds of patients, we took different machine learning and data processing approaches to detect patients with liver disease.
 
-#Applied algorithm - SVM
+# Applied algorithm - SVM
 
-#Steps:
+# Steps:
 
 In this exercise we wil be going through the entire data pipeline from preprocessing, data cleaning, staging and modelling on a relatively small dataset (~500 entries). While executing all the steps, we will calculate the performance using  accuracy and F-score for SVM using Support Vector Classification.
 
-##Reading the data:
+## Reading the data:
 
 In the jupiter notebook file the data is loaded from google drive. It is a multivariate data set, which contains 11 columns [Age	Gender	Total_Bilirubin	Direct_Bilirubin	Alkaline_Phosphotase	Alamine_Aminotransferase	Aspartate_Aminotransferase	Total_Protiens	Albumin	Albumin_and_Globulin_Ratio	Liver_Disease]
 
-##Preprocessing:
+## Preprocessing:
 
-###Removing duplicates
+### Removing duplicates
 
 Duplicate rows can exist in the data because of different reasons. The question regarding whether copies ought to be removed or not relies upon the specific problem context and setting. 
 
@@ -24,7 +24,7 @@ data_duplicate = data[data.duplicated(keep = False)]
 data_duplicate
 `
 
-###Removing null values
+### Removing null values
 
 We will remove null values or perform imputation before running the model on the provided data. I am using `fillna()` for this reason.
 Data imputation of `NaN` values with a specific request statistic(mean, mode, middle) should be possible if adequate setting is accessible. For instance - In our situation, we print those lines whose estimations of section 'Albumin_and_Globulin_Ratio' are missing.
@@ -34,7 +34,7 @@ data['Albumin_and_Globulin_Ratio'] = data['Albumin_and_Globulin_Ratio'].fillna(d
 data['Albumin_and_Globulin_Ratio'].unique()
 `
 
-###Log transform
+### Log transform
 
 In the wake of removing the 'Liver_Disease' column from the dataset as it is the label, we show all characteristic in a histogram organization to check if any component has a skewed dispersion. On those highlights, a log change is applied to lower their range.
 
@@ -43,7 +43,7 @@ disease_initial = data['Liver_Disease']
 features_initial = data.drop('Liver_Disease', axis = 1)
 `
 
-##Scaling
+## Scaling
 
 Normalization (subtracting mean and scaling difference) is required for some strategies. 
 
@@ -55,7 +55,7 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 `
 
-##Categorical features - (Preparing data for model)
+## Categorical features - (Preparing data for model)
 
 `
 features = pd.get_dummies(features_initial)
@@ -66,7 +66,7 @@ features = pd.get_dummies(features_initial)
 disease=pd.get_dummies(disease_initial)
 `
 
-##Modelling
+## Modelling
 
 Prior to applying any algorithm, we will implement a basic indicator, that will basically restore that each data point has 'Liver_Disease'= True. We will check our metrics(accuracy, TPR, FPR) on that predictor.
 
@@ -78,9 +78,9 @@ positive_disease.astype(int)
 report = classification_report(positive_disease, disease)
 `
 
-##SVM Trainning and Prediction
+## SVM Trainning and Prediction
 
-###Implementation
+### Implementation
 
 Support Vector Machine: SVM aims to find an optimal hyperplane that separates the data into different classes.
 
@@ -90,7 +90,7 @@ samples = int(len(X_train) )
 results = train_predict(clf_SVM, samples, X_train, y_train, X_test, y_test)
 `
 
-###Receiver Operating Characteristic Curve
+### Receiver Operating Characteristic Curve
 
 An extra criterion called as Receiver Operator Characteristics(ROC) curve will be utilized. It plots the curve of True Positive Rate versus the False positive Rate, with a more noteworthy region under the curve demonstrating a better True Positive Rate for the equivalent False Positive Rate. This can be useful for this situation as essentially knowing the quantity of right predictions may not get the job done.
 
@@ -100,7 +100,7 @@ fpr, tpr, _ = roc_curve(y_test, pred)
 roc_auc = auc(fpr, tpr)
 `
 
-###Fine Tuning the Models
+### Fine Tuning the Models
 
 We will utilize the grid search strategy to check whether we can improve the accuracy/F-score of SVM with various values for the given hyperparameters.
 
