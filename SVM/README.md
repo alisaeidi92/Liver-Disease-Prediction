@@ -55,17 +55,6 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 `
 
-## Categorical features - (Preparing data for model)
-
-`
-features = pd.get_dummies(features_initial)
-
-`
-
-`
-disease=pd.get_dummies(disease_initial)
-`
-
 ## Modelling
 
 Prior to applying any algorithm, we will implement a basic indicator, that will basically restore that each data point has 'Liver_Disease'= True. We will check our metrics(accuracy, TPR, FPR) on that predictor.
@@ -85,7 +74,7 @@ report = classification_report(positive_disease, disease)
 Support Vector Machine: SVM aims to find an optimal hyperplane that separates the data into different classes.
 
 `
-clf_SVM = SVC(random_state=7)
+clf_SVM = SVC(random_state=9)
 samples = int(len(X_train) )
 results = train_predict(clf_SVM, samples, X_train, y_train, X_test, y_test)
 `
@@ -105,7 +94,7 @@ roc_auc = auc(fpr, tpr)
 We will utilize the grid search strategy to check whether we can improve the accuracy/F-score of SVM with various values for the given hyperparameters.
 
 `
-parameters={'kernel':['poly','rbf','linear'], 'C':[0.001,1,1000]} 
+parameters={'kernel':['poly','rbf','linear'], 'C':[0.001,1,1000], 'gamma': [0.00001, 0.0000001]} 
 scorer = make_scorer(fbeta_score, beta=2)
 _grid_object = GridSearchCV(clf_SVM,parameters,scoring=scorer)
 _grid_fit = _grid_object.fit(X_train,y_train)
